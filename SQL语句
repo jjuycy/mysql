@@ -1,0 +1,265 @@
+
+
+
+
+
+mariadb软件结构
+1.配置文件
+/etc/my.cnf /etc/my.cnf.d/*.conf
+2.命令
+mysql 
+mysqladmin 
+mysqldump
+mysqlbinlog
+3.启动文件
+systemctl start mariadb
+4.监听端口号
+3306
+5.数据文件
+/var/lib/mysql
+6.日志
+/var/log/mariadb/mariadb.log
+
+
+
+给mysql root用户设置密码
+mysqladmin -uroot password 'uplooking'
+mysqladmin -uroot password
+登陆mysql monitor
+mysql -uroot -p
+mysqladmin -uroot -puplooking password uplooking123
+
+
+
+1.每个语句结束以；提交
+2.关键词不区分大小写
+参数区分大小写
+desc 
+use 库
+show databases 查看
+show tables 查看:
+
+
+============================
+=     SQL结构化查询语言	   =
+=			   =
+============================
+查看数据库 
+show databases;
+show tables;
+
+DDL(Data Definition Languages)   create | drop | alter
+数据库定义语言
+创建数据库
+1) create database 库名
+创建表
+use 库
+2) create table 表名 （列名 数据类型, 列名2 数据类型2）
+desc 
+删除表
+3) drop table 表名
+删除库
+4) drop database 库名
+help
+5) alter 变更库表信息 
+alter table booklist MODIFY bookname char(25);
+
+DML(Data Manipulation Languages)  insert into | delete from | update
+数据库操作语言
+
+插入数据
+insert into 表名(列1，列2，列3) values (列1数据，列2数据，列3数据)
+insert into list(id,name) values (2,'bob'),(3,'alice')
+insert into shop values (1,'apple','15.55'),(2,'banana','10.2'),(3,'orange','1.111');
+insert into shop set num=4,name='pineapple',price='55.5';
+
+删除数据
+delete from 表名 匹配条件
+delete from shop where id=1;
+
+修改数据
+update 表名 set 值 匹配条件
+update shop set price='5.5' where num=4;
+
+DCL(Data Control Languages)  grant | revoke | flush logs| flush privileges
+数据库控制语言
+1）认证
+2）授权
+
+grant   权限	on  范围     to    用户名@地址 identified by '密码';
+	SELECT      库.表		  '172.25.0.10'
+	CREATE   bookshop.booklist	  'servera.pod0.example.com'
+	DROP     php.*			  '172.25.0.%'
+	*	 *.*			   
+flush privileges;
+修改授权信息可以使用update
+用法:
+mysql库当中的user表会保存相关授权信息
+可以通过以下命令来完成
+update mysql.user set password=password('uplooking456') where host='172.25.0.12';
+		               调用password加密函数
+
+revoke 权限 on 范围 from 用户@地址
+
+
+	破解mysql的root密码
+		1) 停止服务
+			systemctl stop mariadb
+		2）跳过授权表启动
+			mysqld_safe --skip-grant-tables &
+		3）修改密码
+			update mysql.user set password=password('uplooking') where user='root' and host='localhost';
+		4）先停进程，后重新启动服务
+			kill -9
+			systemctl start mariadb
+
+DQL(Data Query Languages) select 数据库查询语言
+select 列 from 表;
+1）where 定位
+2）order by 排序   desc  倒序
+3）limit 限制
+4）group by 
+5） having
+
+运算 
++ - * /
+between (值1，值2)  含  值1到值2 范围
+and 与  
+or  或
+in  （值1，值2）   值1和值2
+
+
+sql查询练习
+基础查询练习
+查询iwebshop_goods中有哪些商品
+查询iwebshop_goods中所有商品名称，id编号和销售价格
+查询iwebshop_goods中所有商品的seller_id,去除重复
+elect distinct(seller_id) from iwebshop_goods;
+
+order by 和limit查询
+select id,sell_price from iwebshop_goods order by sell_price desc;
+select id,sell_price from iwebshop_goods limit 5,10;
+
+查询iwebshop_goods中name列中的前五行数据
+select name from iwebshop_goods limit 5
+查询iwebshop_goods中name列中的第五行至第九行
+select name from iwebshop_goods limit 5,5;
+查询iwebshop_goods中id,name,sell_price列，根据sell_price进行排序。
+select id,name,sell_price from iwebshop_goods order by sell_price;
+查询iwebshop_goods中销售价格最贵的商品名称
+elect id,name,sell_price from iwebshop_goods order by sell_price desc limit 1;
+查询iwebshop_goods中销售价格最贵的前三商品名称
+select id,name,sell_price from iwebshop_goods order by sell_price desc limit 3;
+查询iwebshop_goods中销售价格最便宜的商品名称
+
+查询iwebshop_goods中销售价格最便宜的前三商品名称
+
+where查询练习
+查询iwebshop_goods中sell_price为999的id,goods_no,sell_price列
+select id,name,goods_no,sell_price from iwebshop_goods where sell_price=999;
+查询iwebshop_goods中id为50至100的所有信息
+select id,sell_price,name from iwebshop_goods where id between 50 and 100;
+查询iwebshop_goods中sell_price小于9000的id,goods_no,sell_price
+
+查询iwebshop_goods中sell_price大于等于8000的id，goods_no,sell_price
+select id,sell_price,name from iwebshop_goods where sell_price >= 8000;
+查询iwebshop_goods中seller_id不为0的id,goods_no,sell_price,name
+select id,sell_price,name,seller_id from iwebshop_goods where seller_id != 0;
+查询iwebshop_goods中价格在5000至10000中的id,goods_no,sell_price
+查询iwebshop_goods中价格不在5000至10000中的id,goods_no,sell_price
+ select id,sell_price,name from iwebshop_goods where sell_price not between 5000 and 10000;
+查询iwebshop_goods中keywords列为NULL值的行
+
+查询iwebshop_goods中cost_price不为Null值的行
+select id,sell_price,name from iwebshop_goods where cost_price is not null;
+
+简单运算查询练习
+检索iwebshop_goods表由seller_id为0的供应商提供且销售价格小于等于5000元的所有产品的名称和销售价格
+select seller_id,name,sell_price from iwebshop_goods where seller_id = 0 and sell_price <=5000;
+检索iwebshop_goods表由seller_id 为0或1制造的所有产品的名称和销售价格
+ select seller_id,name,sell_price from iwebshop_goods where seller_id = 0 or 1;
+检索iwebshop_goods表,列出销售价格为5000元(含)以上且由seller_id 为0或1制造的所有产品
+select seller_id,name,sell_price from iwebshop_goods where (seller_id = 0 or 1) and (sell_price >= 5000);
+
+检索价格为5099、8399或5999的产品名称
+select sell_price,id,name from iwebshop_goods where sell_price in (5099,8399,5999);
+
+列出库存store_nums除8000及100的所有商品的名称和goods_no
+
+检索iwebshop_goods表中库存商品不为8000和100且销售价格小于等于50元的id,goods_no,sell_price
+select name,goods_no,store_nums from iwebshop_goods where store_nums not in (8000,100);
+
+近似|正则匹配练习     like 近似| regexp正则
+	like
+		%   匹配所有
+		_   匹配单个字符
+	regexp 
+		正则
+
+查询iwebshop_goods表中名称包含“飞利浦”字段产品的销售价格
+select name,sell_price from iwebshop_goods where name like "飞利浦%";
+查询iwebshop_goods表中以“批发”字段作为结尾的产品的销售价格
+select name,sell_price from iwebshop_goods where name regexp "批发$";
+查询iwebshop_goods表中价格在100到999之间价格的商品名称
+
+常用运算练习
+查询iwebshop_goods表中所有产品销售价格比市场价格便宜了多少
+查询iwebshop_goods表中销售价格比市场价格便宜了500以上的id编号和名称
+
+常用函数练习
+函数  函数名(参数)
+trim 去除左右空格
+select trim(bookname) from booklist;
+ltrim 去除左空格
+rtrim 去除右空格
+sum   求和
+avg   求平均数
+max   求最大值
+min   求最小值
+count 计数
+
+根据iwebshop_goods表检索目前商城总共正在出售多少种货品
+select count(name) from iwebshop_goods;
+根据iwebshop_goods表中的sell_price列检索目前商城销售价格最贵的产品价格值是多少
+根据iwebshop_goods表中的sell_price列检索目前商城销售价格最便宜的产品价格值是多少
+根据iwebshop_goods表中的sell_price列计算目前所有商品的平均销售价格值是多少
+根据iwebshop_goods表中的sell_price列及market_price计算目前所有商品销售>价格平均比市场价格便宜了多少
+select avg(market_price-sell_price) from iwebshop_goods;
+
+查看当前登陆mysql服务端的用户身份
+select user();
+concat() 拼接
+
+group、having分组练习
+根据iwebshop_goods表查询不同供应商seller_id出售的商品分别有多少种
+
+根据iwebshop_goods表查询不同供应商seller_id出售的最贵的产品价格是多少
+select seller_id,max(sell_price) from iwebshop_goods group by seller_id;
+根据iwebshop_goods表查询不同供应商seller_id出售的产品种类超过10个的seller_id编号。
+select seller_id,count(*) from iwebshop_goods group by seller_id having count(*) > 10;
+
+查询每个商品所积压的货款（提示：库存*单价）
+查询该店不同供应商积压的总货款
+查询积压货款超过50万的供应商id编号，以及该供应商积压的总货款
+查询商品价格小于等于2000的，属于不同供应商的商品分别有几种。
+
+where > group by > having > order by > limit
+
+
+
+
+内连接、外连接
+内连接
+select a.id,a.name,b.seller_name from iwebshop_goods a inner join iwebshop_seller b on a.seller_id = b.id\G;
+交集
+
+外连接分为左和右
+select a.id,a.name,b.seller_name from iwebshop_goods a left join iwebshop_seller b on a.seller_id = b.id\G;
+左连接
+左有，右没有，我也拿出来
+如果左有，右和左匹配成功部分取出来
+select a.id,a.name,b.seller_name from iwebshop_goods a left outer join iwebshop_seller b on a.seller_id = b.id\G;
+
+select a.id,a.name,b.seller_name from iwebshop_goods a right join iwebshop_seller b on a.seller_id = b.id\G;
+取反第二条
+
