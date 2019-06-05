@@ -134,7 +134,7 @@ sql查询练习
 查询iwebshop_goods中有哪些商品
 查询iwebshop_goods中所有商品名称，id编号和销售价格
 查询iwebshop_goods中所有商品的seller_id,去除重复
-elect distinct(seller_id) from iwebshop_goods;
+select distinct(seller_id) from iwebshop_goods;
 
 order by 和limit查询
 select id,sell_price from iwebshop_goods order by sell_price desc;
