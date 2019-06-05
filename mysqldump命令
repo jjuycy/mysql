@@ -1,0 +1,19 @@
+
+mysqldump 默认选项：
+add-drop-table                    TRUE 表示在生成表结构语句之前，生成对应的 DROP TABLE IF EXISTS `table_name`; 语句
+add-locks                         TRUE 表示在生成表中数据的 insert into `table_name` values(...) 之前生成 LOCK TABLES `tab` WRITE;语句
+comments                          TRUE 表示生成备注，就是所有 -- 开头的说明，比如：-- Dumping data for  for table `tab`. 最好还是启用；
+create-options                    TRUE 表示在生成表结构时会生成：ENGINE=InnoDB AUTO_INCREMENT=827 DEFAULT CHARSET=utf8; 附加建表选项
+default-character-set             utf8 指定语句：/*!40101 SET NAMES utf8 */;中的字符集；可能你需要改成 --default-character-set=utf8mb4
+disable-keys                      TRUE 表示生产 insert 语句之前，生成：/*!40000 ALTER TABLE `tbl` DISABLE KEYS */; 可以加快insert速度；
+extended-insert                   TRUE 表示生产的insert是insert into `tbl` values(...),(...),数据行按照net-buffer-length分割合并成多个batch insert
+lock-tables                       TRUE 表示在导出的过程中会锁定所有表；
+max-allowed-packet                25165824 最大支持 24M 的数据包；
+net-buffer-length                 1046528  1M大小的socket buffer
+quick                             TRUE 表示在导出语句时，不缓存，直接输出到控制台或者文件中；
+quote-names                       TRUE 表示对表名和列名使用 `` 符号包裹；防止它们是关键字时会出错;
+set-charset                       TRUE default-character-set=utf8指定字符集，而--set-charset=1/0 表示是否生成/*!40101 SET NAMES utf8 */; 
+dump-date                         TRUE 表示是否在导出文件的末尾生成导出时间：-- Dump completed on 2015-09-15 11:15:10 
+secure-auth                       TRUE 表示登录判断密码时使用新的加密算法，拒绝就的加密算法
+triggers                          TRUE 表示生成触发器脚本；
+tz-utc                            TRUE 表示是否生成：/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */; /*!40103 SET TIME_ZONE='+00:00' */;
