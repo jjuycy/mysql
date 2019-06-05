@@ -23,11 +23,11 @@ systemctl start mariadb
 
 
 给mysql root用户设置密码
-mysqladmin -uroot password 'uplooking'
+mysqladmin -uroot password '*****'
 mysqladmin -uroot password
 登陆mysql monitor
 mysql -uroot -p
-mysqladmin -uroot -puplooking password uplooking123
+mysqladmin -uroot -p*****password ******
 
 
 
@@ -96,7 +96,7 @@ flush privileges;
 用法:
 mysql库当中的user表会保存相关授权信息
 可以通过以下命令来完成
-update mysql.user set password=password('uplooking456') where host='172.25.0.12';
+update mysql.user set password=password('*****') where host='172.25.0.12';
 		               调用password加密函数
 
 revoke 权限 on 范围 from 用户@地址
@@ -108,7 +108,7 @@ revoke 权限 on 范围 from 用户@地址
 		2）跳过授权表启动
 			mysqld_safe --skip-grant-tables &
 		3）修改密码
-			update mysql.user set password=password('uplooking') where user='root' and host='localhost';
+			update mysql.user set password=password('*****) where user='root' and host='localhost';
 		4）先停进程，后重新启动服务
 			kill -9
 			systemctl start mariadb
