@@ -1,0 +1,28 @@
+##说明 本内容来源于知数堂 公开课 : 《MySQL 5.7 高可用新玩法》--吴炳锡 相关视频推荐：https://ke.qq.com/course/172600
+##基本环境准备 使用Centos 7.X 64位系统 MySQL 使用 MySQL-5.7.17-x86_64 版本，去官方下载mysql-5.7.17-linux-glibc2.5-x86_64.tar.gz 版本 官网：https://dev.mysql.com/downloads/mysql/5.7.html#downloads
+服务器操作:
+mkdir /data/Soft
+cd /data/Soft
+wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.17-linux-glibc2.5-x86_64.tar.gz
+
+###MySQL部署约定 二进制文件放置： /opt/mysql/ 下面对应的目录 数据文件全部放置到 /data/mysql/ 下面对应的目录 原始二进制文件下载到/data/Soft/
+
+##MySQL基本安装 
+
+mkdir /opt/mysql /usr/local/mysql -p
+cd /opt/mysql
+tar zxvf /data/Soft/mysql-5.7.17-linux-glibc2.5-x86_64.tar.gz
+cp -af /opt/mysql/mysql-5.7.17-linux-glibc2.5-x86_64/* /usr/local/mysql
+mkdir /data/mysql/mysql3306/{data,logs,tmp} -p
+groupadd mysql
+useradd -g mysql -s /sbin/nologin -d /usr/local/mysql -M mysql
+chown -R mysql:mysql /data/mysql/
+chown -R mysql:mysql /usr/local/mysql
+cd /usr/local/mysql/
+./bin/mysqld --defaults-file=/data/mysql/mysql3306/my3306.cnf --initialize
+cat /data/mysql/mysql3306/data/error.log |grep password
+/usr/local/mysql/bin/mysqld --defaults-file=/data/mysql/mysql3306/my3306.cnf &
+echo "export PATH=$PATH:/usr/local/mysql/bin" >>/etc/profile
+source /etc/profile
+mysql -S /tmp/mysql.sock -p #输才查到密码进入MySQL
+mysql>alter user user() identified by '123456'
