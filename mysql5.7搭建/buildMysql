@@ -26,3 +26,24 @@ echo "export PATH=$PATH:/usr/local/mysql/bin" >>/etc/profile
 source /etc/profile
 mysql -S /tmp/mysql.sock -p #输才查到密码进入MySQL
 mysql>alter user user() identified by '123456'
+
+Centos 7 的firewalld
+外部访问需要添加防火墙信任:
+cat  /usr/lib/firewalld/services/mysql.xml 
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>MySQL</short>
+  <description>MySQL Database Server</description>
+  <port protocol="tcp" port="3306"/>
+</service>
+
+#添加新的服务
+firewall-cmd --permanent --add-service=mysql
+
+#加载配置
+firewall-cmd --reload
+
+#查看对外的服务
+firewall-cmd --list-services
+
+
