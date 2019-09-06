@@ -46,4 +46,5 @@ firewall-cmd --reload
 #查看对外的服务
 firewall-cmd --list-services
 
-
+#查看mysql编码:
+show variables like '%char%';
