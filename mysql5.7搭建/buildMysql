@@ -36,7 +36,7 @@ cat  /usr/lib/firewalld/services/mysql.xml
   <description>MySQL Database Server</description>
   <port protocol="tcp" port="3306"/>
 </service>
-#firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --zone=public --add-port=80/tcp --permanent
 #添加新的服务
 firewall-cmd --permanent --add-service=mysql
 
