@@ -263,3 +263,5 @@ select a.id,a.name,b.seller_name from iwebshop_goods a left outer join iwebshop_
 select a.id,a.name,b.seller_name from iwebshop_goods a right join iwebshop_seller b on a.seller_id = b.id\G;
 取反第二条
 
+查询DB主机test1,test2库的大小
+select sum(data_length+index_length)/1024/1024/1024 as size from information_schema.tables where table_schema in ("test1","test2")
