@@ -17,3 +17,9 @@ dump-date                         TRUE 表示是否在导出文件的末尾生�
 secure-auth                       TRUE 表示登录判断密码时使用新的加密算法，拒绝就的加密算法
 triggers                          TRUE 表示生成触发器脚本；
 tz-utc                            TRUE 表示是否生成：/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */; /*!40103 SET TIME_ZONE='+00:00' */;
+
+备份test1库:
+ /opt/mysql/base/5.7.16/bin/mysqldump -uuser -ppasswd -h127.0.0.1 -P3306 --set-charset --hex-blob --opt --set-gtid-purged=OFF --default-character-set=utf8 --single-transaction --master-data=2 --max-allowed-packet=64M --triggers --routines --events -B --skip-add-drop-table test1 > test1.sql
+
+mysqldump可以行级导出数据，或者也可以将整个表载入内存一次性导出，如果将所有数据导入内存可能会面临内存缓冲区不够的问题。如果要行级导出数据，使用--quick选项（或者--opt，它支持--quick）。--opt选项是默认选项，所以为了保证内存缓冲区，使用--skip-quick。
+如果你使用高版本的mysqldump来备份一个低版本的MySQL服务器中的数据，使用--skip-opt代替--opt或者-- extended-insert选项。
