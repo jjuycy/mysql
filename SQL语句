@@ -72,6 +72,9 @@ insert into 表名(列1，列2，列3) values (列1数据，列2数据，列3数
 insert into list(id,name) values (2,'bob'),(3,'alice')
 insert into shop values (1,'apple','15.55'),(2,'banana','10.2'),(3,'orange','1.111');
 insert into shop set num=4,name='pineapple',price='55.5';
+查询某个库的大小
+
+select table_schema,sum(data_length+index_length)/1024/1024/1024 as table_size from information_schema.tables where table_schema = '' group by table_schema order by table_size limit 10;
 
 删除数据
 delete from 表名 匹配条件
