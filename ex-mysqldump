@@ -1,0 +1,17 @@
+实例级备份
+备份全部的数据库
+ mysqldump -u db_user -h db_host -p db_password -P db_port --set-charset --hex-blob --opt --skip-add-drop-table --set-gtid-purged=OFF --default-character-set=utf8 --single-transaction --master-data=2 --max-allowed-packet=64M --triggers --routines --events --all-databases   > `hostname`_port_`date +%F_%H-%M-%S`.sql
+库级备份
+备份一个数据库的表结构和数据
+ mysqldump -u db_user -h db_host -p db_password -P db_port --set-charset --hex-blob --opt --skip-add-drop-table --set-gtid-purged=OFF --default-character-set=utf8 --single-transaction --master-data=2 --max-allowed-packet=64M --triggers --routines --events --databases  db_name > db_name_`date +%F_%H-%M-%S`.sql
+只备份一个数据库的表结构
+mysqldump -u db_user -h db_host -p db_password -P db_port  --set-charset --opt  --skip-add-drop-table --set-gtid-purged=OFF --default-character-set=utf8  --single-transaction --no-data --databases db_name > db_name_struc_`date +%F_%H-%M-%S`.sql
+表级备份
+备份一个表的表结构和数据
+mysqldump -u db_user -h db_host -p db_password -P db_port  --set-charset --opt  --skip-add-drop-table --set-gtid-purged=OFF --default-character-set=utf8  --single-transaction  db_name table_name > dbname_tname_`date +%F_%H-%M-%S`.sql
+只备份一个表的表数据(不备份表结构)
+mysqldump -u db_user -h db_host -p db_password -P db_port  --set-charset --opt  --skip-add-drop-table --set-gtid-purged=OFF --default-character-set=utf8  --single-transaction --no-create-info db_name table_name > dbname_tname_`date +%F_%H-%M-%S`.sql
+只备份一个表的表结构（无表数据）
+mysqldump -u db_user -h db_host -p db_password -P db_port  --set-charset --opt --skip-add-drop-table  --set-gtid-purged=OFF --default-character-set=utf8  --single-transaction --no-data db_name table_name > dbname_tname_`date +%F_%H-%M-%S`.sql
+备份一个表的部分数据
+mysqldump -u db_user -h db_host -p db_password -P db_port  --set-charset --opt  --skip-add-drop-table --set-gtid-purged=OFF --default-character-set=utf8  --single-transaction --where='filter condition' db_name table_name > dbname_tname_`date +%F_%H-%M-%S`.sql
